@@ -1,0 +1,29 @@
+
+{% extends "base_generic.html" %}
+
+{% block content %}
+<section id="log" class=" container-fluid min-vh-100 bg-light d-flex flex-column justify-content-center align-items-center px-3 py-2">
+  <div class="main-content container  d-flex flex-column justify-content-center align-items-center my-5">
+    <div class="connexion-container bg-white border rounded-2 d-flex flex-column justify-content-center p-4">
+      <div class="d-flex h-100 w-100 align-items-center px-0 mb-3 border-bottom btg">
+        <button class="py-4 px-4 text-uppercase text-center text-nowrap border-0 bg-white w-100 active-item">créer un compte</button>
+        <div class="trait"></div>
+        <a href="{% url 'login' %}" class="py-4 px-4 text-uppercase text-nowrap text-center border-0 bg-white h-100 w-100 ">connexion</a>
+      </div>
+      
+      
+      
+
+<div class="connexion-content w-100">
+  <div class="my-3 d-flex flex-column align-items-center">
+  <form method="post" class="d-flex flex-column">
+    {% csrf_token %}
+    {{user_form}}
+    <input type="submit" value="Rejoindre Sauron" class="align-self-center btn-grad mt-3" />
+  </form>
+</div>
+</div>
+</div>
+</div>
+</section>
+{% endblock %}

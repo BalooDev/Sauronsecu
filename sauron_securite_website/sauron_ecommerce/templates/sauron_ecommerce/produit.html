@@ -1,0 +1,212 @@
+{% extends "base_generic.html" %}
+{% block content %}
+<section class="product container-fluid min-vh-100 bg-light d-flex flex-column justify-content-center align-items-center pt200">
+  <div class="d-flex align-items-center">
+    <a href="" class="text-dark fs-5 mx-2">Accueil</a>
+    <i class="fas fa-angle-right"></i>
+    <a href="" class="text-dark fs-5 mx-2">{{produit.souscategorie.categorie.nom}}</a>
+    <i class="fas fa-angle-right"></i>
+    <a href="" class="text-dark fs-5 mx-2">{{produit.souscategorie.nom}}</a>
+    <i class="fas fa-angle-right"></i>
+    <a href="" class="text-dark fs-5 mx-2">{{produit.nom}}</a>
+  </div>
+  
+  <div class="container border border-1 d-flex flex-column bg-white w-100 px-0 align-items-center my-5 rounded rounded-4">
+    <div class="row d-flex w-100">
+      {% if message != "" %}
+      <h5>{{message}}</h5>
+    
+      {% endif %}
+      <div id="carouselproduit" class="carousel h80 slide w-100 mx-4 col" data-bs-ride="carousel">
+        <ol class="carousel-indicators">
+          <button class="carousel-control-prev " type="button" data-bs-target="#carouselproduit" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon invert" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <li data-bs-target="#carouselproduit " data-bs-slide-to="0" class="invert active"></li>
+          <li data-bs-target="#carouselproduit " data-bs-slide-to="1" class="invert "></li>
+          <li data-bs-target="#carouselproduit " data-bs-slide-to="2" class="invert "></li>
+          <button class="carousel-control-next " type="button" data-bs-target="#carouselproduit" data-bs-slide="next">
+            <span class="carousel-control-next-icon invert" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </ol>
+        <div class="carousel-inner" role="listbox">
+          <div class="carousel-item active">
+            <img src="/static/{{produit.image1}}" alt="First slide" class="product-img-carousel">
+          </div>
+          <div class="carousel-item">
+            <img src="/static/{{produit.image2}}" alt="Second slide" class="product-img-carousel">
+          </div>
+          <div class="carousel-item">
+            <img src="/static/{{produit.image3}}" alt="Third slide" class="product-img-carousel">
+          </div>
+        </div>
+
+
+      </div>
+      <div class="d-flex flex-column p-3 w-50 col minw500">
+        <h3 class="title-product text-capitalize fw-bolder mb-3">
+          {{produit.nom}}
+        </h3>
+        <h5 class="subtitle-product mb-4 fw-bold">
+          {{produit.description}}
+        </h5>
+        <div class="note mb-3 fw-bold">
+          <label for="">Note: {{produit.note}}</label>
+        </div>
+        <h4 class="display-5 text-dark fw-bold">{{produit.prix}} €</h4>
+        <label class="container d-flex flex-column" for="option fw-bold">
+          Option1: 
+          <div class="row d-flex flex-row w-100 form-check py-3 flex-wrap">
+            <div class="fit d-flex align-items-center fit m-3">
+              <input type="radio" class="form-check-input mx-3 " name="option1" id="option1" value="checkedValue" checked>
+              <label class="form-check-label p-3 border border-2 border-dark m-2 ">
+                Display value
+              </label>
+            </div>
+            <div class="fit d-flex align-items-center fit m-3">
+              <input type="radio" class="form-check-input mx-3 " name="option1" id="option1" value="checkedValue">
+              <label class="form-check-label p-3 border border-2 border-dark m-2 ">
+                Display value
+              </label>
+            </div>
+            <div class="fit d-flex align-items-center fit m-3">
+              <input type="radio" class="form-check-input mx-3 " name="option1" id="option1" value="checkedValue">
+              <label class="form-check-label p-3 border border-2 border-dark m-2 ">
+                Display value
+              </label>
+            </div>
+
+
+          </div>
+        </label>
+        
+        {% if ppt %}
+        <p class="text-danger">Ce produit est déja dans votre panier, vous pouvez modifier la quantité :</p>
+        {% endif %}
+        {% if user.is_authenticated %}
+        <form id="addP" class=" d-flex flex-column py-4 align-items-start" method="post" action="{% url 'produit' produit.id%}">  
+          {% csrf_token %}    
+          <div class="d-flex mx-3">
+            <input type="text" id="quantity" name="quantity" class="form-control input-number p-2" style="width: 60px; height:40px;" value="1" min="1" max="100">
+            <span class="input-group-btn mx-2 ">
+              <button type="button" class="quantity-left-minus btn bg-black btn-number"  data-type="minus" data-field="">
+                <i class="fas fa-minus invert"></i>
+              </button>
+            </span>
+            <span class="input-group-btnmx-2">
+                <button type="button" class="quantity-right-plus btn bg-black btn-number" data-type="plus" data-field="">
+                  <i class="fas fa-plus invert"></i>
+                </button>
+            </span>            
+          </div>      
+
+          <button type="submit" id="addproduitbutton" class="btn-grad">Ajouter au panier</button>
+        </form>
+        <script>
+          var idpanier = {{panier.id}}
+          var idproduit = {{produit.id}}
+        </script>
+        {% else %}
+          <a href="{% url 'login' %}" class="text-center">Connecte toi pour continuer tes achats</a>
+        {% endif %}
+        <div class="product-description">
+          <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  Description:
+                </button>
+              </h2>
+              <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto alias optio eum quasi consequatur at quae, cum fuga dolore culpa explicabo delectus inventore harum provident vel nam distinctio eligendi, deserunt tempora enim nobis consectetur pariatur.
+                </div>
+              </div>
+            </div>
+          </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseOne">
+                  Livraison:
+                </button>
+              </h2>
+              <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto alias optio eum quasi consequatur at quae, cum fuga dolore culpa explicabo delectus inventore harum provident vel nam distinctio eligendi, deserunt tempora enim nobis consectetur pariatur.
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true" aria-controls="collapseOne">
+                  Avis:
+                </button>
+              </h2>
+              <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto alias optio eum quasi consequatur at quae, cum fuga dolore culpa explicabo delectus inventore harum provident vel nam distinctio eligendi, deserunt tempora enim nobis consectetur pariatur.
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+      <div class="comment d-flex flex-column align-items-center w-100">
+        <div class="note">
+
+        </div>
+        <div class="commentaires d-flex flex-column align-items-center w-100 py-2 px-5">
+          <h3 class="text-center m-3">Commentaires :</h3>
+          
+          {% if user.is_authenticated %}
+          <form class="mb-3 w-100 d-flex flex-column" method="post" action="{% url 'commentaire' %}">
+            {% csrf_token %}
+            <input type="hidden" name="idproduit" value="{{produit.id}}">
+            <input type="hidden" name="iduser" value="{{user.id}}">
+            <input type="text" name="titre" id="titre" class="form-control w-100" placeholder="Titre du commentaire" aria-describedby="helpId">
+            <small id="helpId" class="text-muted">Help text</small>
+            <textarea class="form-control w-100" name="contenu" id="contenu" rows="3" placeholder="Mon commentaire"></textarea>
+            <small id="helpId" class="text-muted">Help text</small>
+            <div class="mb-3">
+              <label for="note" class="form-label">Note :</label>
+              <select class="p-3 border-0" name="note" id="note">
+                <option>0</option>
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+              </select>
+            </div>
+            <small id="helpId" class="text-muted">Help text</small>
+            <button class="btn-grad align-self-center">Ajouter</button>
+          </form>
+          {% else %}
+          <h5>Connectez vous pour donner votre avis sur ce produit !</h5>
+          {% endif %}
+          {% if commentaires %}
+          {% for commentaire in commentaires %}
+          <div class="commentaire d-flex w-100 my-4 p-3 align-items-center justify-content-between">
+            <div class="d-flex flex-column mx-4">
+              <h5 class="comment-title fw-bold">{{commentaire.titre}}</h5>
+              <p class="comment-text">{{commentaire.contenu}}</p>
+              <small class="comment-date">le {{commentaire.date}} par {{user.username}}</small>
+            </div>
+            <h6 class="display-5">{{commentaire.note}} / 5</h6>
+            {% if commentaire.profile.id == user.id %}
+            <a href="{% url 'commentairedelete' commentaire.id %}"><i class="fas fa-trash-alt fa-2x" style="color:rgb(160, 0, 0);"></i></a>
+            {% endif %}
+          </div>
+          {% endfor %}
+          {% else %}
+          <h5 class="my-4">Aucun commentaire sur ce produit !</h5>
+          {% endif %}
+        </div>
+      </div>
+    </div>      
+  </div>
+</section>
+
+{% endblock %}

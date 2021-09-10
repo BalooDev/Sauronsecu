@@ -1,0 +1,97 @@
+{% extends "base_generic.html" %}
+{% block content %}
+<section class="container-fluid min-vh-100 bg-light d-flex flex-column pt200 align-items-center px-5">
+    <div class="container d-flex w-100 mx-2 justify-content-between align-items-center">
+        <div class="d-flex align-items-center p-5 bg-white justify-content-center bg-transparent">
+          <div class="border-radius-50 p-3 bg-danger position-relative icon-l " style="width: 60px;height: 60px;">
+            <i class="fas fa-shopping-cart position-absolute top-50 start-50 translate-middle fa-1x" style="color:rgb(255, 255, 255)"></i>
+          </div>
+          <h2 class="text-capitalize mx-3 fit ">mon panier :</h2>
+        </div>
+        {% if produit_list %}
+        <button class="btn-grad-red">commander</button>
+        {% endif %}
+    </div>
+    {% if produit_list %}
+
+        <div class="container h-100 w-100 d-flex flex-column justify-content-center align-items-center p-0">
+          <div class="row w-100 px-0 justify-content-center align-items-center">
+            <h2 class="my-2 text-capitalize">Livraison à domicile</h2>
+            <div class="d-flex">
+              <div class="w-75 mx-1">
+            {% for produit in produit_list %}
+            <div class="panier-item p-3 d-flex align-items-center w-100 bg-white my-3 ">
+              <div class="w-50">
+                <img src="/static/{{produit.produit.image1}}" alt="" class="panier-item-img">
+                <div class="panier-item-description d-flex flex-column justify-content-start">
+                  <h5 class="my-1">{{produit.produit.nom}}</h5>
+                  <small class="panier-item-livraison">{{produit.produit.description}}</small>
+                </div>
+              </div>
+              <div class="w-50 h-100">
+                <div class="d-flex align-items-center justify-content-between">
+                  <form method="POST" action="{% url 'panierupdate' produit.id%}" class="d-flex align-items-center">
+                    {% csrf_token %}    
+                      <label for="" class="form-label text-center m-0 mx-3">Quantité</label>
+                      <select class="form-control" name="qt" id="qt" placeholder="">
+                        <option value="{{produit.quantite}}" selected>{{produit.quantite}}</option>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                      </select>
+                    <button type="submit" class="border-0 bg-transparent p-3"><i class="fas fa-edit" style="color:rgb(0, 0, 0);"></i></button>                 
+                  </form>
+
+                  <a href="{% url 'panierdelete' produit.id%}"><i class="fas fa-trash-alt fa-2x" style="color:rgb(160, 0, 0);"></i></a>
+                  <div class="d-flex flex-column align-items bg-transparent">
+                    <img src="" alt="" class="icon-s my-2">
+                    <strong class="price">{{produit.produit.prix}} x {{produit.quantite}} <span id="{{produit.id}}" class=""></span> €</strong>
+                  </div>
+                </div>
+      
+              </div>
+      
+            </div>
+            <script>
+              document.getElementById('{{produit.id}}').innerHTML=parseFloat({{produit.quantite}})*parseFloat({{produit.produit.prix}})
+            </script>
+            {% endfor %}
+            <div class="d-flex justify-content-between align-items-center">            
+              <h3 class="display-5 text-dark"><span>Montant total: </span> {{panier.total}} €</h3>
+              <button class="btn-grad-red">Finaliser la commande</button>
+            </div>
+          </div>
+          <div class="w-25 fit mx-4 bg-white my-3 p-2 d-flex flex-column">
+            <h5 class="text-capitalize fw-bolder my-2">
+              Informations sur la livraison
+            </h5>
+            <h6 class="text-capitalize fw-bold">
+              Lieux de livraison:
+            </h6>
+            <p><span>{{user.first_name}}</span>  <span>{{user.last_name}}</span></p>
+            <p><span class="text-grey">Adresse: </span> <span>{{profile.adresse}}</span></p>
+            <p><span class="text-grey">Ville: </span> <span>{{profile.ville}}</span></p>
+            <p><span class="text-grey">Code postal: </span> <span>{{profile.code_postal}}</span></p>
+            <p><span class="text-grey">Pays: </span> <span>{{profile.pays}}</span></p>
+            <h6 class="text-capitalize fw-bold">
+              Delai de livraison:
+            </h6>
+            <p>Livraison à votre domicile en 2-3 jours ouvrés</p>
+
+            <a href="{% url 'profile' user.id%}" class="btn-grad">Modifier mes infos</a>
+          </div>
+        </div>
+
+          </div>
+ 
+
+
+    </div>
+ 
+  {% else %}
+    <p class="align-self-center my-5">Votre panier est tristement vide <i class="far fa-sad-tear fs-2x"></i> !</p>
+  {% endif %} 
+</section>
+{% endblock %}

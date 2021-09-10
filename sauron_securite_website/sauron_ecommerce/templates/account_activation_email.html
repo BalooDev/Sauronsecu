@@ -1,0 +1,14 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<section  class="container-fluid min-vh-100 bg-light d-flex flex-column justify-content-center align-items-center py-5 pt200">
+    <div class="container-fluid py-5 d-flex flex-column justify-content-center align-items-center">
+    
+Bienvenue {{ user.username }},
+
+Please click on the link below to confirm your registration:
+
+http://{{ domain }}{% url 'activate' uidb64=uid token=token %}
+    </div>
+</section>
+{% endblock %}
